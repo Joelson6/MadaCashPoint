@@ -1,0 +1,79 @@
+name: cuf_recouvrement_mobile
+description: "Application mobile de Recouvrement Mobile Money - Commune Urbaine de Fianarantsoa (CUF)"
+publish_to: 'none'
+
+version: 4.0.0+1
+
+environment:
+  sdk: ^3.13.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # --- Gestion d'état ---
+  flutter_bloc: ^9.1.0
+
+  # --- Réseau XML-RPC ---
+  http: ^1.3.0
+  xml: ^6.5.0
+
+  # --- Base de données locale (offline-first) ---
+  isar: ^3.1.0+1
+  # Fork local corrigé (namespace + AGP 9) : isar_flutter_libs 3.1.0+1 publié
+  # ne compile plus avec l'AGP moderne (cf. packages/isar_flutter_libs).
+  isar_flutter_libs:
+    path: packages/isar_flutter_libs
+  path_provider: ^2.1.5
+
+  # --- Lecture QR Code ---
+  mobile_scanner: ^7.1.2
+
+  # --- Géolocalisation ---
+  geolocator: ^14.0.2
+
+  # --- Capture & compression d'images ---
+  image_picker: ^1.1.2
+  flutter_image_compress: ^2.4.0
+
+  # --- Impression Bluetooth thermique ---
+  # Fork local corrigé (namespace + AGP 9) : l'original 1.2.3 est abandonné
+  # et ne compile plus avec l'AGP moderne (cf. packages/blue_thermal_printer).
+  blue_thermal_printer:
+    path: packages/blue_thermal_printer
+
+  # --- Stockage des paramètres légers ---
+  shared_preferences: ^2.3.3
+
+  # --- Verrouillage biométrique ---
+  local_auth: ^2.3.0
+
+  # --- Détection de connectivité ---
+  connectivity_plus: ^6.1.0
+
+  # --- Génération de codes QR (autocollant de référence kiosque) ---
+  qr_flutter: ^4.1.0
+
+  # --- Support bilingue ---
+  intl: ^0.20.2
+
+  cupertino_icons: ^1.0.8
+  crypto: 3.0.6
+  camera: 0.11.2
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.13
+  # Utilisé uniquement par les tests pour injecter le répertoire de la base
+  # Isar (aucune implémentation native n'est disponible sous `flutter test`).
+  path_provider_platform_interface: ^2.1.0
+
+flutter:
+  uses-material-design: true
