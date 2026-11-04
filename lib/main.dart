@@ -66,7 +66,7 @@ class _CufRootState extends State<CufRoot> {
   Widget build(BuildContext context) {
     if (ServiceLocator.instance.isInitialized) return const CufApp();
     return MaterialApp(
-      title: 'CUF Recouvrement Mobile Money',
+      title: 'MadaCash',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: BootScreen(error: _error, busy: _booting, onRetry: _bootstrap),
@@ -137,7 +137,7 @@ class BootScreen extends StatelessWidget {
           children: [
             CircularProgressIndicator(),
             SizedBox(height: 16),
-            Text('Démarrage de CUF Recouvrement…'),
+            Text('Démarrage de MadaCash…'),
           ],
         ),
       ),

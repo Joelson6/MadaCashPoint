@@ -26,8 +26,8 @@ class AppLocalizations {
   static const _keys = <String, Map<String, String>>{
     // --- Générique ---
     'app_name': {
-      'fr': 'Recouvrement Mobile Money CUF',
-      'mg': 'Fanangonana Mobile Money CUF',
+      'fr': 'MadaCash',
+      'mg': 'MadaCash',
     },
     'welcome': {'fr': 'Bienvenue', 'mg': 'Tongasoa'},
     'warning': {'fr': 'Attention', 'mg': 'Tandremo'},
@@ -231,8 +231,8 @@ class AppLocalizations {
       'mg': 'Tsy nahomby ny fakana ny faritra voarara.',
     },
     'phone_format_error': {
-      'fr': 'Numéro invalide (9 chiffres requis, ex. 034 12 345 67)',
-      'mg': 'Laharana tsy marina (mila isa 9, oh. 034 12 345 67)',
+      'fr': 'Numéro invalide (10 chiffres requis)',
+      'mg': 'Laharana tsy marina (mila isa 10)',
     },
     'request_otp': {
       'fr': 'Recevoir le code SMS',
@@ -242,8 +242,8 @@ class AppLocalizations {
     'prenom_label': {'fr': 'Prénoms', 'mg': 'Fanampiny'},
     'otp_length': {'fr': 'Code à 6 chiffres', 'mg': 'Kaody isa 6'},
     'pin_digits': {
-      'fr': '9 chiffres requis (ex. 034 12 345 67)',
-      'mg': 'Mila isa 9 (oh. 034 12 345 67)',
+      'fr': '10 chiffres requis',
+      'mg': 'Mila isa 10',
     },
     'renewal_amount': {'fr': 'Renouvellement annuel', 'mg': 'Fanavaozana isan-taona'},
     'qr_not_captured': {
@@ -497,6 +497,22 @@ class AppLocalizations {
     },
     'map_here': {'fr': 'Vous êtes ici', 'mg': 'Eto ianao'},
     'map_kiosque': {'fr': 'Kiosque', 'mg': 'Kioska'},
+    'dossier_gps_map_title': {
+      'fr': 'Position GPS du demandeur',
+      'mg': 'Toerana GPS an\'ny mpangataka',
+    },
+    'dossier_gps_map_pin': {
+      'fr': 'Emplacement déclaré',
+      'mg': 'Toerana voalaza',
+    },
+    'dossier_gps_map_expand': {
+      'fr': 'Agrandir la carte',
+      'mg': 'Hanalehibe ny sarintany',
+    },
+    'dossier_gps_map_missing': {
+      'fr': 'Position GPS non disponible pour ce dossier.',
+      'mg': 'Tsy misy ny toerana GPS amin\'ity raharaha ity.',
+    },
 
     // --- Mes paiements (section 5.4 / 4.2) ---
     'payments_title': {'fr': 'Mes paiements', 'mg': 'Ny fandoavam-bolako'},
@@ -580,8 +596,8 @@ class AppLocalizations {
     // --- Formulaire : validation & brouillon ---
     'field_required': {'fr': 'Champ obligatoire', 'mg': 'Tsy maintsy fenoina'},
     'cin_invalid': {
-      'fr': 'N° CIN invalide (6 caractères min, chiffres/lettres)',
-      'mg': 'CIN tsy marina',
+      'fr': 'N° CIN invalide (exactement 12 chiffres)',
+      'mg': 'CIN tsy marina (isa 12 marina)',
     },
     'invalid_number': {'fr': 'Valeur numérique invalide', 'mg': 'Tsy isa io'},
     'must_be_positive': {

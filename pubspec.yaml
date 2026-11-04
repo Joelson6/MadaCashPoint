@@ -64,6 +64,7 @@ dependencies:
   camera: 0.11.2
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
+  postgres: ^3.5.20
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,19 @@ dev_dependencies:
   # Utilisé uniquement par les tests pour injecter le répertoire de la base
   # Isar (aucune implémentation native n'est disponible sous `flutter test`).
   path_provider_platform_interface: ^2.1.0
+  flutter_launcher_icons: ^0.14.4
+  archive: 4.5.2
 
 flutter:
   uses-material-design: true
+
+# Icône de l'application générée depuis icones.jpg (recadrage carré centré).
+# Génération : dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 26
+  adaptive_icon_background: "#F2F2F2"
+  adaptive_icon_foreground: "assets/icon/app_icon.png"
+  adaptive_icon_foreground_inset: 8

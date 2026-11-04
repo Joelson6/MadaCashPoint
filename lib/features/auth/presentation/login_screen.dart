@@ -86,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         validator: (v) => PhoneValidator.isValid(v ?? '')
                             ? null
-                            : '9 chiffres requis (ex. 034 12 345 67)',
+                            : '10 chiffres requis',
                       ),
                       const SizedBox(height: 16),
                       TextFormField(

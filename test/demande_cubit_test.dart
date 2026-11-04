@@ -177,7 +177,7 @@ void main() {
       final p = backend.lastPayload!;
       // Numéro canonique (9 chiffres sans 0 initial) : c'est le format stocké
       // en base, celui que réutilisent get_mes_dossiers / get_mes_paiements.
-      expect(p['telephone'], '341234567');
+      expect(p['telephone'], '0341234567');
       expect(p['nom_prenoms'], 'RAKOTO Jean');
       expect(p['cin'], '123456789');
       expect(p['fokontany'], 'Ambohimanga');

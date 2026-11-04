@@ -19,7 +19,7 @@ void main() {
   late KiosqueRepo kiosques;
   late DemandeRepo demandes;
 
-  const tel = '340000002';
+  const tel = '0340000002';
   const dossier = 'CUF2026-22189';
 
   setUp(() async {
@@ -105,7 +105,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'APPROUVE',
         'note': '',
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
 
@@ -144,7 +144,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'APPROUVE',
         'note': '',
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
       final nombre = await nbKiosques();
@@ -153,7 +153,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'APPROUVE',
         'note': '',
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
 
@@ -174,7 +174,7 @@ void main() {
         'code_dossier': 'CUF2026-22145',
         'decision': 'APPROUVE',
         'note': '',
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
 
@@ -195,7 +195,7 @@ void main() {
           'code_dossier': dossier,
           'decision': 'REJETE',
           'note': '   ',
-          'agent_telephone': '340000001',
+          'agent_telephone': '0340000001',
           'session_token': 'session-de-test',
         }),
         throwsA(
@@ -222,7 +222,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'REJETE',
         'note': motif,
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
 
@@ -254,7 +254,7 @@ void main() {
           'code_dossier': dossier,
           'decision': 'EN_COURS_INSTRUCTION',
           'note': '',
-          'agent_telephone': '340000001',
+          'agent_telephone': '0340000001',
           'session_token': 'session-de-test',
         }),
         throwsA(
@@ -272,7 +272,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'EN_COURS_INSTRUCTION',
         'note': consigne,
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
 
@@ -295,7 +295,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'REJETE',
         'note': 'Motif du premier passage',
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
       await resetDossier();
@@ -304,7 +304,7 @@ void main() {
         'code_dossier': dossier,
         'decision': 'EN_COURS_INSTRUCTION',
         'note': 'Dossier repris après complément',
-        'agent_telephone': '340000001',
+        'agent_telephone': '0340000001',
         'session_token': 'session-de-test',
       });
 
@@ -329,7 +329,7 @@ void main() {
           'code_dossier': 'OFFLINE-1700000001',
           'decision': 'APPROUVE',
           'note': '',
-          'agent_telephone': '340000001',
+          'agent_telephone': '0340000001',
           'session_token': 'session-de-test',
         }),
         throwsA(isA<ArgumentError>()),
@@ -342,7 +342,7 @@ void main() {
           'code_dossier': 'CUF2026-99999',
           'decision': 'APPROUVE',
           'note': '',
-          'agent_telephone': '340000001',
+          'agent_telephone': '0340000001',
           'session_token': 'session-de-test',
         }),
         throwsA(
@@ -361,7 +361,7 @@ void main() {
           'code_dossier': dossier,
           'decision': 'VALIDE',
           'note': '',
-          'agent_telephone': '340000001',
+          'agent_telephone': '0340000001',
           'session_token': 'session-de-test',
         }),
         throwsA(isA<ArgumentError>()),

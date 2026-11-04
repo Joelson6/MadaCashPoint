@@ -23,7 +23,7 @@ class SeedData {
       ..dateSoumission = '2026-04-17'
       ..typeIdentification = AppConfig.typeIndividuel
       ..proprietaireNom = 'RAMANANTENASOA MANAMPINIAINA clandreasy'
-      ..proprietaireTelephone = '344670181'
+      ..proprietaireTelephone = '0344670181'
       ..autorisationNumero = '221CUF2025'
       ..autorisationDate = '2025-11-11'
       ..dossierEncoursNumero = '221cuf2025'

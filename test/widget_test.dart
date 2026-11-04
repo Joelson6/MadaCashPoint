@@ -9,30 +9,17 @@ import 'package:cuf_recouvrement_mobile/data/models/kiosque.dart';
 void main() {
   group('Validators (section 4.1)', () {
     test('numéro de téléphone malgache normalisé', () {
-      expect(PhoneValidator.normalize('034 12 345 67'), '341234567');
-      expect(PhoneValidator.normalize('+261341234567'), '341234567');
-      expect(PhoneValidator.normalize('261341234567'), '341234567');
+      expect(PhoneValidator.normalize('034 12 345 67'), '0341234567');
+      expect(PhoneValidator.normalize('+261341234567'), '0341234567');
+      expect(PhoneValidator.normalize('261341234567'), '0341234567');
       expect(PhoneValidator.isValid('020123456'), isFalse);
     });
 
-    test('normalisation idempotente (déjà normalisé => identique)', () {
-      // Régression : le format normalisé est stocké en base puis réintroduit
-      // comme argument de get_mes_dossiers / get_mes_paiements. Sans
-      // idempotence, '340000002' devenait '400000002' et le suivi du
-      // demandeur renvoyait une liste vide.
-      const dejaNormalise = '340000002';
-      expect(PhoneValidator.normalize(dejaNormalise), dejaNormalise);
-      expect(PhoneValidator.normalize('0$dejaNormalise'), dejaNormalise);
-      expect(
-        PhoneValidator.normalize(PhoneValidator.normalize('034 00 000 02')!),
-        '340000002',
-      );
-      // Aucune valeur normalisée ne commence par '0'.
-      for (final brut in ['034 12 345 67', '+261341234567', '341234567']) {
-        final n = PhoneValidator.normalize(brut)!;
-        expect(n, isNot(startsWith('0')));
-        expect(n, PhoneValidator.normalize(n));
-      }
+    test('normalisation téléphone 10 chiffres', () {
+      expect(PhoneValidator.normalize('0340000002'), '0340000002');
+      expect(PhoneValidator.normalize('0' '340000002'), '0340000002');
+      expect(PhoneValidator.normalize('261340000002'), '0340000002');
+      expect(PhoneValidator.normalize('+261340000002'), '0340000002');
     });
 
     test('PIN 4 ou 6 chiffres uniquement', () {

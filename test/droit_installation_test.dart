@@ -19,7 +19,7 @@ void main() {
   late LocalStore store;
   late EmbeddedBackend backend;
 
-  const tel = '340000002';
+  const tel = '0340000002';
   const dossierCible = 'CUF2026-30001';
 
   Map<String, dynamic> dossier(List<Map<String, dynamic>> dossiers) =>
@@ -63,7 +63,7 @@ void main() {
       'code_kiosque': '2D009',
       'montant': 150000,
       'nature_taxe': 'INSTALLATION',
-      'agent_telephone': '340000001',
+      'agent_telephone': '0340000001',
     });
 
     // 3. L'écriture est propagée au dossier, pas seulement au kiosque.
@@ -115,7 +115,7 @@ void main() {
       'code_kiosque': '2D001',
       'montant': 150000,
       'nature_taxe': 'INSTALLATION',
-      'agent_telephone': '340000001',
+      'agent_telephone': '0340000001',
     });
     expect(await nbEncaissements(), avant + 1);
     final lignesApresPremier = await nbLignesInstallation();
@@ -125,7 +125,7 @@ void main() {
       'code_kiosque': '2D001',
       'montant': 150000,
       'nature_taxe': 'INSTALLATION',
-      'agent_telephone': '340000001',
+      'agent_telephone': '0340000001',
       'numero_quittance': premier.numeroQuittance,
     });
 

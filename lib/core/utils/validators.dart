@@ -1,26 +1,20 @@
-/// Validation des numéros de téléphone malgaches (9 chiffres, ex. 034XXXXXXX).
+/// Validation des numéros de téléphone (10 chiffres exactement).
 class PhoneValidator {
-  static final RegExp _phone9 = RegExp(r'^0?3[1234][0-9]{7}$');
+  static final RegExp _phone10 = RegExp(r'^[0-9]{10}$');
 
-  /// Retourne le numéro normalisé à 9 chiffres (sans le 0 initial).
-  ///
-  /// **Idempotent** : `normalize(normalize(x)) == normalize(x)`. C'est
-  /// indispensable car le format normalisé (`34XXXXXXXX`) est stocké en base
-  /// (session, comptes, dossiers) puis **réintroduit** comme argument des
-  /// requêtes (`get_mes_dossiers`, `get_mes_paiements`). Une version qui
-  /// retirait systématiquement le premier caractère retournait
-  /// `400000002` au lieu de `340000002` lors du second passage : le suivi des
-  /// dossiers et l'historique des paiements du demandeur revenaient vides.
+  /// Retourne le numéro normalisé à 10 chiffres.
   static String? normalize(String raw) {
-    var s = raw.trim().replaceAll(RegExp(r'[\s\-.]'), '');
-    if (s.startsWith('+261')) {
-      s = '0${s.substring(4)}';
-    } else if (s.startsWith('261')) {
-      s = '0${s.substring(3)}';
+    var s = raw.trim().replaceAll(RegExp(r'[\s\-.+()]'), '');
+    // Indicatif Madagascar : 261XXXXXXXXX -> 0XXXXXXXXX.
+    if (s.startsWith('261')) {
+      s = s.substring(3);
     }
-    if (!_phone9.hasMatch(s)) return null;
-    // 034XXXXXXXX -> 34XXXXXXXX ; 34XXXXXXXX -> identique.
-    return s.startsWith('0') ? s.substring(1) : s;
+    // Numéro national saisi sans le 0 initial : 34XXXXXXX -> 034XXXXXXX.
+    if (s.length == 9 && !s.startsWith('0')) {
+      s = '0$s';
+    }
+    if (!_phone10.hasMatch(s)) return null;
+    return s;
   }
 
   static bool isValid(String raw) => normalize(raw) != null;
@@ -33,8 +27,9 @@ class PinValidator {
   static bool is4or6(String v) => _pin.hasMatch(v);
 }
 
-/// Validation du numéro de CIN (alphanumérique, ex. 101 012 345 678).
+/// Validation du numéro de CIN (exactement 12 chiffres).
 class CinValidator {
-  static bool isValid(String v) =>
-      RegExp(r'^[A-Za-z0-9\s-]{6,}$').hasMatch(v.trim());
+  static final RegExp _cin12 = RegExp(r'^[0-9]{12}$');
+
+  static bool isValid(String v) => _cin12.hasMatch(v.trim());
 }

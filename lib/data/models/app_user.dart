@@ -8,7 +8,7 @@ part 'app_user.g.dart';
 class AppUser {
   Id id = Isar.autoIncrement;
 
-  /// Identifiant universel : numéro de téléphone local 9 chiffres (ex 034XXXXXXX).
+  /// Identifiant universel : numéro de téléphone à 10 chiffres exactement.
   @Index(unique: true, replace: true)
   late String telephone;
 

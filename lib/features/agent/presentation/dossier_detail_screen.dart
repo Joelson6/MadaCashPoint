@@ -3,12 +3,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/localization/app_localizations.dart';
 import '../../../core/security/auto_lock.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
+import '../../shared/widgets/real_map_view.dart';
 import '../../shared/widgets/shared_widgets.dart';
 import '../../auth/bloc/auth_cubit.dart';
 import '../bloc/agent_cubit.dart';
@@ -402,6 +404,8 @@ class _Contenu extends StatelessWidget {
           ],
         ),
 
+        _CarteGps(d: d),
+
         // --- Pièces numériques (photos) avec visionneur zoom ---
         _PhotosDossier(d: d),
 
@@ -539,6 +543,131 @@ class _Champ extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CarteGps extends StatelessWidget {
+  final Map<String, dynamic> d;
+  const _CarteGps({required this.d});
+
+  static double? _coord(Object? v) =>
+      v is num ? v.toDouble() : double.tryParse('$v');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final lat = _coord(d['gps_latitude']);
+    final lon = _coord(d['gps_longitude']);
+    final valide =
+        lat != null &&
+        lon != null &&
+        lat >= -90 &&
+        lat <= 90 &&
+        lon >= -180 &&
+        lon <= 180 &&
+        !(lat == 0 && lon == 0);
+
+    if (!valide) {
+      return Card(
+        margin: const EdgeInsets.only(bottom: 10),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              const Icon(Icons.location_off, color: AppTheme.statutRouge),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l.t('dossier_gps_map_missing'),
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final point = LatLng(lat, lon);
+    final repere = (d['emplacement_repere'] ?? '').toString().trim();
+    final pin = MapPin(
+      point: point,
+      color: AppTheme.primaryNavy,
+      label: l.t('dossier_gps_map_pin'),
+      primary: true,
+    );
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.map, color: AppTheme.primaryNavy),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l.t('dossier_gps_map_title'),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryNavy,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  tooltip: l.t('dossier_gps_map_expand'),
+                  icon: const Icon(Icons.open_in_full),
+                  onPressed: () => _ouvrirPleinEcran(context, pin, l),
+                ),
+              ],
+            ),
+            const Divider(height: 12),
+            RealMapView(pins: [pin], height: 260),
+            const SizedBox(height: 8),
+            Text(
+              '${lat.toStringAsFixed(6)}, ${lon.toStringAsFixed(6)}',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black54,
+              ),
+            ),
+            if (repere.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                repere,
+                style: const TextStyle(fontSize: 12, color: Colors.black54),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _ouvrirPleinEcran(
+    BuildContext context,
+    MapPin pin,
+    AppLocalizations l,
+  ) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => Dialog.fullscreen(
+        child: Scaffold(
+          appBar: AppBar(title: Text(l.t('dossier_gps_map_title'))),
+          body: LayoutBuilder(
+            builder: (context, constraints) => RealMapView(
+              pins: [pin],
+              height: constraints.maxHeight,
+            ),
+          ),
+        ),
       ),
     );
   }

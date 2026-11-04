@@ -6,6 +6,7 @@ import 'package:cuf_recouvrement_mobile/features/auth/bloc/auth_cubit.dart';
 import 'package:cuf_recouvrement_mobile/features/auth/presentation/auth_gate.dart';
 import 'package:cuf_recouvrement_mobile/features/auth/presentation/login_screen.dart';
 import 'package:cuf_recouvrement_mobile/features/agent/presentation/agent_home_screen.dart';
+import 'package:cuf_recouvrement_mobile/features/agent/presentation/agent_profil_screen.dart';
 import 'package:cuf_recouvrement_mobile/features/auth/presentation/register_screen.dart';
 import 'package:cuf_recouvrement_mobile/features/citoyen/presentation/citoyen_home_screen.dart';
 import 'package:cuf_recouvrement_mobile/data/remote/cuf_backend.dart';
@@ -19,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class _StubBackend implements CufBackend {
   String? error;
   String? loginError;
+  String? requestOtpError;
   int registerCalls = 0;
 
   /// Rôle renvoyé par la « Wortie ». Volontairement une variante non
@@ -27,13 +29,16 @@ class _StubBackend implements CufBackend {
   String role = 'agent';
 
   @override
-  Future<String> requestOtp(String telephone) async => '123456';
+  Future<String> requestOtp(String telephone) async {
+    if (requestOtpError != null) throw ArgumentError(requestOtpError!);
+    return '123456';
+  }
 
   @override
   Future<SessionInfo> userLogin(String telephone, String pin) async {
     if (loginError != null) throw ArgumentError(loginError!);
     return SessionInfo(
-      telephone: '340000001',
+      telephone: '0340000001',
       nom: 'AGENT COMMUNAL',
       role: role,
       sessionToken: 'STUB-AGENT',
@@ -45,7 +50,7 @@ class _StubBackend implements CufBackend {
     if (error != null) throw ArgumentError(error!);
     registerCalls++;
     return SessionInfo(
-      telephone: '341234567',
+      telephone: '0341234567',
       nom: 'RASOLOARISOA Jean Claude',
       role: 'demandeur',
       sessionToken: 'STUB-TOKEN',
@@ -193,6 +198,50 @@ void main() {
     );
   });
 
+  testWidgets(
+    'déconnexion depuis le profil agent : retour automatique à la connexion',
+    (tester) async {
+      tester.view.physicalSize = const Size(1000, 2200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final stub = _StubBackend();
+      final sl = ServiceLocator.instance;
+      late AuthCubit cubit;
+
+      await tester.pumpWidget(
+        BlocProvider<AuthCubit>(
+          create: (_) => cubit = AuthCubit(stub, sl.secureStore),
+          child: const AuthGate(),
+        ),
+      );
+      await _pump(tester);
+
+      unawaited(cubit.login('034 00 000 01', '1234'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AgentHomeScreen), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.account_circle));
+      await tester.pumpAndSettle();
+      expect(find.byType(AgentProfilScreen), findsOneWidget);
+
+      await tester.tap(find.text('Se déconnecter'));
+      await tester.pumpAndSettle();
+
+      expect(cubit.state.isAuthenticated, isFalse);
+      expect(
+        find.byType(AgentProfilScreen),
+        findsNothing,
+        reason: 'la route du profil doit être dépilée à la déconnexion',
+      );
+      expect(
+        find.byType(LoginScreen),
+        findsOneWidget,
+        reason: 'la page de connexion doit être affichée automatiquement',
+      );
+    },
+  );
+
   testWidgets('RBAC : toute variante du rôle agent ouvre l\'espace agent', (
     tester,
   ) async {
@@ -286,6 +335,52 @@ void main() {
         findsOneWidget,
         reason: 'un échec doit maintenir l\'écran d\'inscription',
       );
+      expect(find.byType(CitoyenHomeScreen), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'inscription OTP : un numéro déjà utilisé reste sur le formulaire',
+    (tester) async {
+      tester.view.physicalSize = const Size(1000, 2200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final stub = _StubBackend()
+        ..requestOtpError =
+            'Un compte existe déjà pour ce numéro. Connectez-vous.';
+      final sl = ServiceLocator.instance;
+
+      await tester.pumpWidget(
+        BlocProvider<AuthCubit>(
+          create: (_) => AuthCubit(stub, sl.secureStore),
+          child: const AuthGate(),
+        ),
+      );
+      await _pump(tester);
+
+      await tester.tap(find.text('Créer un compte citoyen'));
+      await _pump(tester);
+      expect(find.byType(RegisterScreen), findsOneWidget);
+
+      final ctx = tester.element(find.byType(RegisterScreen));
+      final cubit = BlocProvider.of<AuthCubit>(ctx);
+      unawaited(cubit.requestOtp('0341234567'));
+      await _pump(tester);
+
+      expect(cubit.state.isAuthenticated, isFalse);
+      expect(cubit.state.otpPending, isFalse);
+      expect(
+        find.byType(RegisterScreen),
+        findsOneWidget,
+        reason: 'un numéro déjà utilisé ne doit pas quitter l\'inscription',
+      );
+      expect(
+        find.text('Un compte existe déjà pour ce numéro. Connectez-vous.'),
+        findsWidgets,
+        reason: 'l\'erreur doit être affichée à l\'utilisateur',
+      );
+      expect(find.byType(LoginScreen), findsNothing);
       expect(find.byType(CitoyenHomeScreen), findsNothing);
     },
   );

@@ -3,7 +3,7 @@
 class AppConfig {
   AppConfig._();
 
-  static const String appName = 'CUF Recouvrement Mobile Money';
+  static const String appName = 'MadaCash';
   static const String appVersion = '1.0.0';
 
   /// URL du serveur XML-RPC du site web centralisé de la CUF.

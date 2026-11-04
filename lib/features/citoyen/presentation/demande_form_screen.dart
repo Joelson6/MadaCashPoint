@@ -11,9 +11,11 @@ import '../../../core/localization/app_localizations.dart';
 import '../../../core/security/secure_store.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/document_capture.dart';
+import '../../../core/utils/form_rules.dart';
 import '../../../core/utils/formatters.dart';
-import '../../../core/utils/validators.dart';
+import '../../../core/utils/input_formatters.dart';
 import '../../auth/bloc/auth_cubit.dart';
+import '../../shared/widgets/auto_form_fields.dart';
 import '../../shared/widgets/shared_widgets.dart';
 import '../bloc/demande_cubit.dart';
 import '../widgets/exclusion_zone_map.dart';
@@ -445,6 +447,17 @@ class _DemandeFormScreenState extends State<DemandeFormScreen> {
     return StepState.indexed;
   }
 
+  /// Date déjà saisie (brouillon) ramenée dans les bornes du sélecteur.
+  DateTime? _dateInitiale() {
+    final d = DateTime.tryParse(_field('cin_date'));
+    if (d == null) return null;
+    final now = DateTime.now();
+    final min = DateTime(1950);
+    if (d.isBefore(min)) return min;
+    if (d.isAfter(now)) return now;
+    return d;
+  }
+
   Widget _step0Form(
     BuildContext context,
     DemandeCubit cubit,
@@ -457,43 +470,41 @@ class _DemandeFormScreenState extends State<DemandeFormScreen> {
           TextFormField(
             controller: _c('nom_prenoms'),
             textCapitalization: TextCapitalization.words,
+            inputFormatters: AutoInputFormatters.nomMajuscules(),
             decoration: InputDecoration(
               labelText: l.t('fullname_label'),
               hintText: 'ex. RASOLOARISON Jean Claude',
               prefixIcon: const Icon(Icons.person),
             ),
-            validator: (v) => (v == null || v.trim().isEmpty)
-                ? l.t('field_required')
-                : (v.trim().length < 3 ? l.t('field_required') : null),
+            validator: (v) => FormRules.nom(v, l),
             onChanged: (v) => cubit.setField('nom_prenoms', v),
           ),
           const SizedBox(height: 10),
           TextFormField(
             controller: _c('cin'),
-            textCapitalization: TextCapitalization.characters,
+            keyboardType: TextInputType.number,
+            inputFormatters: AutoInputFormatters.cin(),
             decoration: InputDecoration(
               labelText: l.t('cin_label'),
-              hintText: 'ex. 201 012 345 678',
+              hintText: 'ex. 201012345678',
               prefixIcon: const Icon(Icons.badge),
             ),
-            validator: (v) =>
-                CinValidator.isValid(v ?? '') ? null : l.t('cin_invalid'),
+            validator: (v) => FormRules.cin(v, l),
             onChanged: (v) => cubit.setField('cin', v),
           ),
           const SizedBox(height: 10),
-          TextFormField(
+          AutoDateField(
             controller: _c('cin_date'),
-            decoration: InputDecoration(
-              labelText: l.t('cin_date_label'),
-              hintText: 'ex. 2020-03-15',
-              prefixIcon: const Icon(Icons.event),
+            label: l.t('cin_date_label'),
+            hint: 'AAAA-MM-JJ',
+            initialDate: _dateInitiale(),
+            firstDate: DateTime(1950),
+            lastDate: DateTime.now(),
+            validator: (v) => FormRules.dateIso(v, l),
+            onDateSelected: (d) => cubit.setField(
+              'cin_date',
+              Formatters.dateISO(d),
             ),
-            validator: (v) {
-              if (v == null || v.trim().isEmpty) return l.t('field_required');
-              final d = DateTime.tryParse(v.trim());
-              return d == null ? l.t('cin_invalid') : null;
-            },
-            onChanged: (v) => cubit.setField('cin_date', v),
           ),
           const SizedBox(height: 10),
           TextFormField(

@@ -16,6 +16,8 @@ analyzer:
     - ios/**
     - web/**
     - windows/**
+    # Exemples obsolètes des forks locaux : non compilés par l'application.
+    - packages/**/example/**
 
 linter:
   # The lint rules applied to this project can be customized in the

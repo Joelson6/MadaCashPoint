@@ -72,7 +72,7 @@ class EmbeddedBackend implements CufBackend {
     final norm = PhoneValidator.normalize(telephone);
     if (norm == null) {
       throw ArgumentError(
-        'Numéro de téléphone invalide (format local 9 chiffres requis)',
+        'Numéro de téléphone invalide (10 chiffres requis)',
       );
     }
     final user = await _users.findByTelephone(norm);
@@ -1275,7 +1275,7 @@ class EmbeddedBackend implements CufBackend {
 
   // --- Gestion directe des comptes (admin back-office) ---
   Future<AppUser?> _agentSeed() async {
-    return await _users.findByTelephone('340000001');
+    return await _users.findByTelephone('0340000001');
   }
 
   /// Crée le compte agent de démonstration (créé côté back-office admin).
@@ -1283,7 +1283,7 @@ class EmbeddedBackend implements CufBackend {
     final ext = await _agentSeed();
     if (ext != null) return;
     final agent = AppUser(
-      telephone: '340000001',
+      telephone: '0340000001',
       pinCode: Crypto.sha256('1234'),
       nom: 'RAZAFIMANDIMBY Hery',
       role: 'agent_communal',
@@ -1300,7 +1300,7 @@ class EmbeddedBackend implements CufBackend {
   ///    renouvellements) → « Mes paiements » et « Suivi » pleinement démontrables ;
   ///  - un dossier en cours d'instruction en parallèle.
   Future<void> provisionCitoyenDemo() async {
-    const tel = '340000002';
+    const tel = '0340000002';
     if (await _users.findByTelephone(tel) != null) return;
 
     final citoyen = AppUser(
@@ -1381,7 +1381,7 @@ class EmbeddedBackend implements CufBackend {
       proprietaireNom: kiosque.proprietaireNom,
       montant: AppConfig.renouvellementAnnuelAriary,
       natureTaxe: 'RENOUVELLEMENT',
-      agentTelephone: '340000001',
+      agentTelephone: '0340000001',
       agentSessionToken: 'seed-demo',
     );
     paiement1.numeroQuittance = 'QUIT-20241205-100234';
@@ -1395,7 +1395,7 @@ class EmbeddedBackend implements CufBackend {
       proprietaireNom: kiosque.proprietaireNom,
       montant: AppConfig.renouvellementAnnuelAriary,
       natureTaxe: 'RENOUVELLEMENT',
-      agentTelephone: '340000001',
+      agentTelephone: '0340000001',
       agentSessionToken: 'seed-demo',
     );
     paiement2.numeroQuittance = 'QUIT-20251205-100345';

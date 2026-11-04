@@ -32,21 +32,26 @@ class _DossiersScreenState extends State<DossiersScreen> {
     });
   }
 
+  bool _correspondRecherche(Map<String, dynamic> d, String q) {
+    final s = q.trim().toLowerCase();
+    if (s.isEmpty) return true;
+    final codeDossier = (d['code_dossier'] ?? '').toString().toLowerCase();
+    final nomPrenoms = (d['nom_prenoms'] ?? '').toString().toLowerCase();
+    final nomCommercial = (d['nom_commercial'] ?? '').toString().toLowerCase();
+    final proprietaireNom = (d['proprietaire_nom'] ?? '').toString().toLowerCase();
+    final demandeurNom = (d['demandeur_nom'] ?? '').toString().toLowerCase();
+    return codeDossier.contains(s) ||
+        nomPrenoms.contains(s) ||
+        nomCommercial.contains(s) ||
+        proprietaireNom.contains(s) ||
+        demandeurNom.contains(s);
+  }
+
   List<Map<String, dynamic>> _filtrer(List<Map<String, dynamic>> dossiers) {
     var liste = _filtre == 'TOUS'
         ? dossiers
         : dossiers.where((d) => d['statut'] == _filtre).toList();
-    final q = _recherche.trim().toLowerCase();
-    if (q.isNotEmpty) {
-      liste = liste.where((d) {
-        return [
-          d['code_dossier'],
-          d['nom_prenoms'],
-          d['nom_commercial'],
-          d['fokontany'],
-        ].any((v) => (v ?? '').toString().toLowerCase().contains(q));
-      }).toList();
-    }
+    liste = liste.where((d) => _correspondRecherche(d, _recherche)).toList();
     return liste;
   }
 
@@ -183,9 +188,15 @@ class _DossiersScreenState extends State<DossiersScreen> {
                   onChanged: (v) => setState(() => _recherche = v),
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.search),
-                    hintText: l.t('search_hint'),
+                    hintText: 'Rechercher par nom du demandeur ou par n° de dossier',
                     isDense: true,
                     border: const OutlineInputBorder(),
+                    suffixIcon: _recherche.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () => setState(() => _recherche = ''),
+                          )
+                        : null,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -198,7 +209,7 @@ class _DossiersScreenState extends State<DossiersScreen> {
                 else if (visibles.isEmpty)
                   EtatVide(
                     message: _recherche.trim().isNotEmpty
-                        ? l.t('search_no_result')
+                        ? 'Aucun dossier trouvé pour cette recherche (nom du demandeur ou n° de dossier).'
                         : l.t('dossiers_empty_filter'),
                   )
                 else

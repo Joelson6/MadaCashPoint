@@ -280,7 +280,6 @@ class LanguageSwitchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(right: 4),
       child: Tooltip(
@@ -296,20 +295,21 @@ class LanguageSwitchButton extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              border: Border.all(color: scheme.outlineVariant),
+              color: Colors.white,
+              border: Border.all(color: Colors.black26),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.translate, size: 14, color: scheme.primary),
+                const Icon(Icons.translate, size: 14, color: Colors.black),
                 const SizedBox(width: 4),
                 Text(
                   l.isMg ? 'FR' : 'MG',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
-                    color: scheme.primary,
+                    color: Colors.black,
                   ),
                 ),
               ],

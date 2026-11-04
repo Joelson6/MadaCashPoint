@@ -244,6 +244,11 @@ class NotificationService {
   ) {
     final liste = build(telephone, dossiers, paiements);
     liste.addAll(persistantes.map(anomalieVersNotification));
+    // La source distante peut renvoyer plusieurs fois la même ligne
+    // persistante : on déduplique la liste fusionnée par identifiant métier
+    // avant l'affichage et le comptage des non-lus.
+    final vus = <String>{};
+    liste.retainWhere((n) => vus.add(n.id));
     liste.sort((a, b) => b.date.compareTo(a.date));
     return liste;
   }

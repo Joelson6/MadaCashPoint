@@ -21,8 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  const tel = '340000002';
-  const autreTel = '340000099';
+  const tel = '0340000002';
+  const autreTel = '0340000099';
   final service = NotificationService.instance;
 
   final dossiers = <Map<String, dynamic>>[
@@ -117,6 +117,30 @@ void main() {
         liste.length,
         reason: 'aucun statut lu partagé entre deux numéros',
       );
+    });
+  });
+
+  group('notifications persistantes', () {
+    test('une ligne d\'anomalie répétée ne produit qu\'une seule carte', () {
+      final anomalie = <String, dynamic>{
+        'id_unique': 'anomalie-AN-12345',
+        'type': 'ANOMALIE_SIGNALLEE',
+        'code_kiosque': 'K-001',
+        'type_anomalie': 'NON_CONFORMITE',
+        'message_agent': 'Kiosque non conforme',
+        'reference_anomalie': 'AN-12345',
+        'date': '2026-10-01T09:00:00.000',
+        'lu': false,
+        'important': true,
+      };
+
+      final liste = service.buildComplet(tel, const [], const [], [
+        anomalie,
+        anomalie,
+      ]);
+
+      expect(liste.length, 1, reason: 'pas de doublon dans la liste');
+      expect(liste.single.id, 'anomalie-AN-12345');
     });
   });
 

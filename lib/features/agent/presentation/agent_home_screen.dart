@@ -37,9 +37,17 @@ class AgentHomeScreen extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.account_circle),
           tooltip: l.t('profile'),
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const AgentProfilScreen()),
-          ),
+          onPressed: () {
+            final agentCubit = context.read<AgentCubit>();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => BlocProvider.value(
+                  value: agentCubit,
+                  child: const AgentProfilScreen(),
+                ),
+              ),
+            );
+          },
         ),
       ],
       child: BlocConsumer<AgentCubit, agent_state.AgentState>(
@@ -120,7 +128,7 @@ class AgentHomeScreen extends StatelessWidget {
               const SizedBox(height: 10),
               if (state.pendingSync > 0)
                 Card(
-                  color: AppTheme.statutOrange.withOpacity(0.08),
+                  color: AppTheme.statutOrange.withValues(alpha: 0.08),
                   child: ListTile(
                     leading: const Icon(
                       Icons.cloud_upload,

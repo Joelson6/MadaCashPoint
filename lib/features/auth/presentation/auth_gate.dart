@@ -35,7 +35,7 @@ class AuthGate extends StatelessWidget {
       // Déconnexion : on dépile explicitement jusqu'à la racine. Sans cela une
       // déconnexion déclenchée depuis un écran empilé (fiche kiosque, scan,
       // encaissement) laisserait cet écran au-dessus de l'écran de connexion.
-      listenWhen: (prev, curr) => !prev.isAuthenticated && curr.loggedOut,
+      listenWhen: (prev, curr) => !prev.loggedOut && curr.loggedOut,
       listener: (context, _) {
         final nav = rootNavigatorKey.currentState;
         if (nav != null && nav.canPop()) {

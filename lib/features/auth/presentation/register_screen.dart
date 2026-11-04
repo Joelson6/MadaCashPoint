@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _requestOtp(AuthCubit cubit) async {
     if (!PhoneValidator.isValid(_phoneCtrl.text)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Numéro invalide (9 chiffres requis)')),
+        const SnackBar(content: Text('Numéro invalide (10 chiffres requis)')),
       );
       return;
     }
@@ -68,21 +68,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
+          // Un échec doit rester SUR le formulaire, même si un état de session
+          // résiduel traîne : seule une création réellement réussie (aucune
+          // erreur) fait quitter l'inscription.
+          if (state.error != null) {
+            final messenger = ScaffoldMessenger.of(context);
+            messenger
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content: Text(state.error!),
+                  backgroundColor: Colors.red.shade700,
+                ),
+              );
+            return;
+          }
           if (state.isAuthenticated) {
             // `/register` a été empilée par-dessus la route `/` (voir
             // `LoginScreen`) : sans ce retour à la racine, l'utilisateur
             // resterait bloqué sur le formulaire d'inscription alors que la
             // session vient d'être créée.
             Navigator.of(context).popUntil((route) => route.isFirst);
-            return;
-          }
-          if (state.error != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error!),
-                backgroundColor: Colors.red.shade700,
-              ),
-            );
           }
         },
         builder: (context, state) {

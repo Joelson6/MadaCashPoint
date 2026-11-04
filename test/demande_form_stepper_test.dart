@@ -53,10 +53,13 @@ Future<DemandeCubit> _ouvrir(WidgetTester tester) async {
 /// construites) : 0 nom, 1 CIN, 2 date CIN, 3 lieu CIN, 4 quartier,
 /// 5 nom commercial, 6 longueur, 7 largeur, 8 emplacement.
 Future<void> _remplirEtape0(WidgetTester tester) async {
+  final cubit = tester
+      .element(find.byType(DemandeFormScreen))
+      .read<DemandeCubit>();
   final champs = find.byType(TextFormField);
   await tester.enterText(champs.at(0), 'RASOLOARISON Jean Claude');
   await tester.enterText(champs.at(1), '201012345678');
-  await tester.enterText(champs.at(2), '2020-03-15');
+  cubit.setField('cin_date', '2020-03-15');
   await tester.enterText(champs.at(3), 'Fianarantsoa');
   await tester.enterText(champs.at(4), 'Ambohijatovo');
 }

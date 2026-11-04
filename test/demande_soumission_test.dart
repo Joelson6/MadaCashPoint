@@ -241,11 +241,11 @@ void main() {
         final enregistre = await DemandeRepo(store).all();
         expect(
           enregistre.single.telephone,
-          '340000002',
+          '0340000002',
           reason: 'le téléphone est normalisé à l\'écriture',
         );
 
-        final dossiers = await embarque.getMesDossiers('340000002');
+        final dossiers = await embarque.getMesDossiers('0340000002');
         expect(
           dossiers,
           hasLength(1),
@@ -282,7 +282,7 @@ void main() {
           {'code_dossier': 'CUF2026-22189', 'statut': 'APPROUVE'},
         ];
 
-        await cubit.loadDossiers('341234567');
+        await cubit.loadDossiers('0341234567');
 
         expect(
           cubit.state.dossiers,
